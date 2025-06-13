@@ -8,6 +8,7 @@ services:
       POSTGRES_DB: movietracker
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
 

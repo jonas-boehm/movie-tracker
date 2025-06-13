@@ -1,1 +1,56 @@
+<nav class="navbar navbar-light bg-white border-bottom shadow-sm px-4">
+  <div class="container-fluid justify-content-between">
+    <div class="d-flex align-items-center">
+      <div class="bg-primary text-white rounded-circle p-2 me-2">
+        <i class="bi bi-camera-video"></i>
+      </div>
+      <h5 class="mb-0">MovieTracker</h5>
+    </div>
+    <div>
+      <span *ngIf="currentUser" class="me-3">Willkommen, {{ currentUser }}</span>
+      <button *ngIf="currentUser" class="btn btn-outline-primary btn-sm me-2" (click)="logout()">Logout</button>
+      <button *ngIf="!currentUser" class="btn btn-primary btn-sm" (click)="toggleLogin()">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Login
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <app-login *ngIf="showLogin && !showRegister"
+                 (close)="showLogin = false"
+                 (switchToRegister)="showRegister = true"
+                 (loggedIn)="currentUser = $event">
+      </app-login>
+
+      <app-register *ngIf="showRegister"
+                    (close)="showRegister = false"
+                    (switchToLogin)="showLogin = true; showRegister = false">
+      </app-register>
+    </div>
+  </div>
+
+  <!-- Filterleiste -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 bg-white border rounded shadow-sm p-3 mt-4">
+    <input [(ngModel)]="searchTerm" (input)="onSearch()"  type="text" class="form-control me-2" placeholder="🔍 Nach Filmen suchen..." style="max-width: 250px;">
+    <select class="form-select" style="max-width: 160px;">
+      <option>Alle Genres</option><option>Action</option><option>Drama</option>
+    </select>
+    <select class="form-select" style="max-width: 140px;">
+      <option>Alle Jahre</option><option>2024</option><option>2023</option>
+    </select>
+    <select class="form-select" style="max-width: 180px;">
+      <option>⭐️⭐️⭐️+ Sterne</option><option>Alle</option>
+    </select>
+    <button class="btn btn-primary"><i class="bi bi-plus-lg"></i> Film hinzufügen</button>
+  </div>
+
+  <!-- MovieCards via Komponente -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-4">
+    <app-movie-card *ngFor="let movie of filteredMovies" [movie]="movie"></app-movie-card>
+  </div>
+</div>
+
 <router-outlet></router-outlet>

@@ -4,11 +4,12 @@ const express = require('express');
 const cors = require('cors');
 const movieRoutes = require('./routes/movies');
 const path = require('path');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
 
 const PORT = process.env.PORT || 3000;

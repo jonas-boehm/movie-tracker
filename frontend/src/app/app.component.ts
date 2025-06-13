@@ -1,12 +1,57 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ApiService } from './core/services/api.service';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { MovieCardComponent } from './shared/components/movie-card/movie-card.component';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    LoginComponent,
+    RegisterComponent,
+    MovieCardComponent,
+    RouterOutlet
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'frontend';
+export class AppComponent implements OnInit {
+  currentUser = '';
+  showLogin = false;
+  showRegister = false;
+  searchTerm = '';
+
+  movies: any[] = [];
+  filteredMovies: any[] = [];
+
+  constructor(private api: ApiService) {}
+
+  ngOnInit() {
+    this.api.getPopular().subscribe((data) => {
+      this.movies = data;
+      this.filteredMovies = data;
+    });
+  }
+
+  onSearch() {
+    const term = this.searchTerm.toLowerCase().trim();
+    this.filteredMovies = this.movies.filter((m) =>
+      m.title.toLowerCase().includes(term)
+    );
+  }
+
+  toggleLogin() {
+    this.showLogin = !this.showLogin;
+    this.showRegister = false;
+  }
+
+  logout() {
+    this.currentUser = '';
+  }
 }

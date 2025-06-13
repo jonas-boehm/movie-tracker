@@ -1,0 +1,20 @@
+<div class="container mt-5 register-container">
+  <h2 class="mb-4">Registrierung</h2>
+  <form (submit)="onRegister($event)">
+    <div class="mb-3">
+      <label class="form-label">Benutzername</label>
+      <input type="text" class="form-control" [(ngModel)]="username" name="username" [ngClass]="{ 'is-invalid': error }" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Passwort</label>
+      <input type="password" class="form-control" [(ngModel)]="password" name="password" [ngClass]="{ 'is-invalid': error }" required />
+    </div>
+    <div *ngIf="message" class="mb-3">
+      <div [class]="error ? 'text-danger' : 'text-success'">{{ message }}</div>
+    </div>
+    <button type="submit" class="btn btn-success w-100">Registrieren</button>
+  </form>
+  <p class="text-center mt-3">
+    Bereits registriert? <a href="#" (click)="switchToLogin.emit()">Zum Login</a>
+  </p>
+</div>

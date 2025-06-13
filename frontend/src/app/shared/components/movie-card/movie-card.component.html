@@ -1,0 +1,15 @@
+<div class="card shadow-sm border border-light-subtle hover-shadow transition-all h-100">
+  <img
+    *ngIf="movie.poster_path"
+    [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+    alt="{{ movie.title }}"
+    class="card-img-top"
+  />
+  <div class="card-body">
+    <h5 class="card-title">{{ movie.title }}</h5>
+    <p class="card-text text-muted">{{ movie.release_date | date }}</p>
+    <div>
+      <span class="badge bg-primary me-1">{{ movie.vote_average }}/10</span>
+    </div>
+  </div>
+</div>

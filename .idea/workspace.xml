@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="00bb3738-4c1d-49bd-80cf-64b42bea9a35" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/routes/ratings.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/websocket.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/init/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/db/init/init.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.ts" afterDir="false" />
     </list>
@@ -29,7 +22,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/frontend" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -76,7 +69,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1749827097747</updated>
-      <workItem from="1749827099128" duration="23683000" />
+      <workItem from="1749827099128" duration="24972000" />
     </task>
     <servers />
   </component>

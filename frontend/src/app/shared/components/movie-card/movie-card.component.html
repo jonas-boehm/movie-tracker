@@ -5,11 +5,39 @@
     alt="{{ movie.title }}"
     class="card-img-top"
   />
+
   <div class="card-body">
     <h5 class="card-title">{{ movie.title }}</h5>
     <p class="card-text text-muted">{{ movie.release_date | date }}</p>
-    <div>
-      <span class="badge bg-primary me-1">{{ movie.vote_average }}/10</span>
+
+    <!-- Bewertungsanzeige -->
+    <div *ngIf="ratingCount > 0" class="mb-2">
+      <span class="text-warning">
+        ★ {{ averageRating }} / 5 ({{ ratingCount }} Bewertung{{ ratingCount > 1 ? 'en' : '' }})
+      </span>
+    </div>
+    <div *ngIf="ratingCount === 0" class="mb-2">
+      <small class="text-muted">Noch keine Bewertung</small>
+    </div>
+
+    <!-- Bewertungssterne (klickbar) -->
+    <div class="d-flex gap-1">
+      <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+        <button
+          class="btn btn-sm p-0 border-0 bg-transparent"
+          (click)="rateMovie(star)"
+          title="{{ star }} Sterne geben"
+        >
+          <i
+            class="bi"
+            [ngClass]="{
+              'bi-star-fill text-warning': averageRating >= star,
+              'bi-star text-muted': averageRating < star
+            }"
+            style="font-size: 1.2rem;"
+          ></i>
+        </button>
+      </ng-container>
     </div>
   </div>
 </div>

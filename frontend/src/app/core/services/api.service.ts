@@ -24,8 +24,12 @@ export class ApiService {
   }
 
   // ✅ Bewertung absenden
-  rateMovie(movieId: number, rating: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/${movieId}/rate`, { rating });
+  rateMovie(movieId: number, rating: number, userId: number): Observable<any> {
+    return this.http.post('/api/ratings/rate', {
+      movieId,
+      rating,
+      userId
+    });
   }
 
   // ✅ Filmsuche nach Titel

@@ -14,13 +14,13 @@ export class ApiService {
   }
 
   // ✅ Registrierung
-  register(username: string, password: string): Observable<any> {
-    return this.http.post('/api/auth/register', { username, password });
+  register(username: string, password: string) {
+    return this.http.post('http://localhost:3000/api/auth/register', { username, password });
   }
 
   // ✅ Login
-  login(username: string, password: string): Observable<any> {
-    return this.http.post('/api/auth/login', { username, password });
+  login(username: string, password: string) {
+    return this.http.post('http://localhost:3000/api/auth/login', { username, password });
   }
 
   // ✅ Bewertung absenden

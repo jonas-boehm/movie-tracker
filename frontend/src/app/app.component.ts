@@ -26,21 +26,67 @@ export class AppComponent implements OnInit {
   showLogin = false;
   showRegister = false;
 
+  filteredMovies: any[] = [];
+
   searchTerm = '';
-  selectedGenre = 'all';
-  selectedYear = 'all';
+  selectedGenre = 'Alle Genres';
+  selectedYear = 'Alle Jahre';
   selectedRating = 'all';
 
-  movies: any[] = [];
-  filteredMovies: any[] = [];
+  currentPage = 1;
+  totalPages = 1000; // maximales Limit von TMDB
+  isLoading = false;
 
   constructor(private api: ApiService) {}
 
   ngOnInit() {
-    this.api.getPopular().subscribe((data) => {
-      this.movies = data;
-      this.filterMovies(); // direkt anwenden
+    this.loadPage(1);
+  }
+
+  onSearch() {
+    this.loadPage(1);
+  }
+
+  onFilterChange() {
+    this.loadPage(1);
+  }
+
+  loadPage(page: number) {
+    this.currentPage = page;
+
+    const genre = this.selectedGenre !== 'Alle Genres' ? this.selectedGenre : '';
+    const year = this.selectedYear !== 'Alle Jahre' ? this.selectedYear : '';
+    const rating = this.selectedRating;
+    const query = this.searchTerm.trim();
+
+    this.api.filterMovies(query, genre, year, rating, page).subscribe((data) => {
+      this.filteredMovies = data;
     });
+  }
+
+  mapGenre(name: string): number {
+    const genreMap: { [key: string]: number } = {
+      'Action': 28,
+      'Adventure': 12,
+      'Animation': 16,
+      'Comedy': 35,
+      'Crime': 80,
+      'Documentary': 99,
+      'Drama': 18,
+      'Family': 10751,
+      'Fantasy': 14,
+      'History': 36,
+      'Horror': 27,
+      'Music': 10402,
+      'Mystery': 9648,
+      'Romance': 10749,
+      'Science Fiction': 878,
+      'TV Movie': 10770,
+      'Thriller': 53,
+      'War': 10752,
+      'Western': 37
+    };
+    return genreMap[name] || 0;
   }
 
   toggleLogin() {
@@ -52,30 +98,28 @@ export class AppComponent implements OnInit {
     this.currentUser = '';
   }
 
-  onFilterChange() {
-    this.filterMovies();
+  goToPreviousPage() {
+    if (this.currentPage > 1) {
+      this.loadPage(this.currentPage - 1);
+    }
   }
 
-  onSearch() {
-    this.filterMovies();
+  goToNextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.loadPage(this.currentPage + 1);
+    }
+  }
+  getVisiblePages(): number[] {
+    const maxVisible = 9;
+    const pages: number[] = [];
+    const start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    const end = Math.min(this.totalPages, start + maxVisible - 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    return pages;
   }
 
-  filterMovies() {
-    this.filteredMovies = this.movies.filter(movie => {
-      const matchesTitle = movie.title?.toLowerCase().includes(this.searchTerm.toLowerCase().trim());
-
-      const matchesGenre = this.selectedGenre === 'all'
-        || movie.genre_ids?.includes(Number(this.selectedGenre));
-
-      const matchesYear = this.selectedYear === 'all'
-        || movie.release_date?.startsWith(this.selectedYear);
-
-      const matchesRating =
-        this.selectedRating === 'none' ? !movie.vote_average :
-          this.selectedRating === 'all' ? true :
-            movie.vote_average >= Number(this.selectedRating);
-
-      return matchesTitle && matchesGenre && matchesYear && matchesRating;
-    });
-  }
 }

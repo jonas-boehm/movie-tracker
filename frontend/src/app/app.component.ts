@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
   selectedRating = 'all';
 
   currentPage = 1;
-  totalPages = 1000; // maximales Limit von TMDB
+  totalPages = 1000;
   isLoading = false;
 
   constructor(private api: ApiService) {}
@@ -59,8 +59,33 @@ export class AppComponent implements OnInit {
     const rating = this.selectedRating;
     const query = this.searchTerm.trim();
 
-    this.api.filterMovies(query, genre, year, rating, page).subscribe((data) => {
-      this.filteredMovies = data;
+    // Wenn ein Suchbegriff vorhanden ist, zuerst Suche ausführen
+    if (query) {
+      this.api.searchMovies(query, page).subscribe(data => {
+        this.filteredMovies = this.applyLocalFilters(data);
+      });
+    } else {
+      // Kein Suchbegriff → filter API verwenden
+      this.api.filterMovies('', genre, year, rating, page).subscribe(data => {
+        this.filteredMovies = data;
+      });
+    }
+  }
+
+  applyLocalFilters(movies: any[]) {
+    return movies.filter((movie) => {
+      const matchesGenre = this.selectedGenre === 'Alle Genres' ||
+        (movie.genre_ids && movie.genre_ids.includes(this.mapGenre(this.selectedGenre)));
+
+      const matchesYear = this.selectedYear === 'Alle Jahre' ||
+        (movie.release_date && movie.release_date.startsWith(this.selectedYear));
+
+      const matchesRating =
+        this.selectedRating === 'all' ? true :
+          this.selectedRating === 'none' ? !movie.vote_average :
+            movie.vote_average >= +this.selectedRating;
+
+      return matchesGenre && matchesYear && matchesRating;
     });
   }
 
@@ -109,6 +134,7 @@ export class AppComponent implements OnInit {
       this.loadPage(this.currentPage + 1);
     }
   }
+
   getVisiblePages(): number[] {
     const maxVisible = 9;
     const pages: number[] = [];
@@ -121,5 +147,5 @@ export class AppComponent implements OnInit {
 
     return pages;
   }
-
 }
+

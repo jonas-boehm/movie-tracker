@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: movietracker
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - TMDB_API_KEY=cdb0257ad7abde3588acbf704db891d7
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/movietracker
+    volumes:
+      - ./frontend/dist/frontend/browser:/app/public
+
+
+volumes:
+  pgdata:

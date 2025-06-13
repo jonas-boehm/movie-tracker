@@ -13,7 +13,11 @@ import { MovieCardComponent } from '../../shared/components/movie-card/movie-car
 })
 export class MovieListComponent implements OnInit {
   movies: any[] = [];
+
   searchTerm: string = '';
+  selectedGenre: string = 'all';
+  selectedYear: string = 'all';
+  selectedRating: string = 'all';
 
   constructor(private api: ApiService) {}
 
@@ -24,8 +28,26 @@ export class MovieListComponent implements OnInit {
   }
 
   get filteredMovies() {
-    return this.movies.filter(movie =>
-      movie.title?.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    return this.movies.filter((movie) => {
+      const matchesSearch = this.searchTerm
+        ? movie.title?.toLowerCase().includes(this.searchTerm.toLowerCase())
+        : true;
+
+      const matchesGenre = this.selectedGenre !== 'all'
+        ? movie.genre_ids?.includes(+this.selectedGenre) || movie.genre === this.selectedGenre
+        : true;
+
+      const matchesYear = this.selectedYear !== 'all'
+        ? movie.release_date?.startsWith(this.selectedYear)
+        : true;
+
+      const matchesRating = this.selectedRating !== 'all'
+        ? this.selectedRating === 'none'
+          ? !movie.rating
+          : movie.rating >= +this.selectedRating
+        : true;
+
+      return matchesSearch && matchesGenre && matchesYear && matchesRating;
+    });
   }
 }

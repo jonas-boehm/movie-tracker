@@ -34,18 +34,37 @@
 
   <!-- Filterleiste -->
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 bg-white border rounded shadow-sm p-3 mt-4">
-    <input [(ngModel)]="searchTerm" (input)="onSearch()"  type="text" class="form-control me-2" placeholder="🔍 Nach Filmen suchen..." style="max-width: 250px;">
-    <select class="form-select" style="max-width: 160px;">
-      <option>Alle Genres</option><option>Action</option><option>Drama</option>
+    <input [(ngModel)]="searchTerm" (input)="onSearch()" type="text" class="form-control me-2" placeholder="🔍 Nach Filmen suchen..." style="max-width: 250px;">
+
+    <select [(ngModel)]="selectedGenre" (change)="onFilterChange()" class="form-select" style="max-width: 160px;">
+      <option value="all">Alle Genres</option>
+      <option value="28">Action</option>
+      <option value="18">Drama</option>
+      <option value="35">Komödie</option>
+      <option value="27">Horror</option>
+      <option value="878">Sci-Fi</option>
+      <option value="10749">Romance</option>
     </select>
-    <select class="form-select" style="max-width: 140px;">
-      <option>Alle Jahre</option><option>2024</option><option>2023</option>
+
+    <select [(ngModel)]="selectedYear" (change)="onFilterChange()" class="form-select" style="max-width: 140px;">
+      <option value="all">Alle Jahre</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+      <option value="2020">2020</option>
     </select>
-    <select class="form-select" style="max-width: 180px;">
-      <option>⭐️⭐️⭐️+ Sterne</option><option>Alle</option>
+
+    <select [(ngModel)]="selectedRating" (change)="onFilterChange()" class="form-select" style="max-width: 250px;">
+      <option value="all">⭐️⭐️⭐️⭐️⭐️ 5 Sterne</option>
+      <option value="4">⭐️⭐️⭐️⭐️ 4+ Sterne</option>
+      <option value="3">⭐️⭐️⭐️ 3+ Sterne</option>
+      <option value="none">Unbewertet</option>
     </select>
+
     <button class="btn btn-primary"><i class="bi bi-plus-lg"></i> Film hinzufügen</button>
   </div>
+
 
   <!-- MovieCards via Komponente -->
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-4">

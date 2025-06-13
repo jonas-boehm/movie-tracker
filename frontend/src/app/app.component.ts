@@ -5,7 +5,7 @@ import { ApiService } from './core/services/api.service';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { MovieCardComponent } from './shared/components/movie-card/movie-card.component';
-import {RouterOutlet} from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +25,11 @@ export class AppComponent implements OnInit {
   currentUser = '';
   showLogin = false;
   showRegister = false;
+
   searchTerm = '';
+  selectedGenre = 'all';
+  selectedYear = 'all';
+  selectedRating = 'all';
 
   movies: any[] = [];
   filteredMovies: any[] = [];
@@ -35,15 +39,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.api.getPopular().subscribe((data) => {
       this.movies = data;
-      this.filteredMovies = data;
+      this.filterMovies(); // direkt anwenden
     });
-  }
-
-  onSearch() {
-    const term = this.searchTerm.toLowerCase().trim();
-    this.filteredMovies = this.movies.filter((m) =>
-      m.title.toLowerCase().includes(term)
-    );
   }
 
   toggleLogin() {
@@ -53,5 +50,32 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.currentUser = '';
+  }
+
+  onFilterChange() {
+    this.filterMovies();
+  }
+
+  onSearch() {
+    this.filterMovies();
+  }
+
+  filterMovies() {
+    this.filteredMovies = this.movies.filter(movie => {
+      const matchesTitle = movie.title?.toLowerCase().includes(this.searchTerm.toLowerCase().trim());
+
+      const matchesGenre = this.selectedGenre === 'all'
+        || movie.genre_ids?.includes(Number(this.selectedGenre));
+
+      const matchesYear = this.selectedYear === 'all'
+        || movie.release_date?.startsWith(this.selectedYear);
+
+      const matchesRating =
+        this.selectedRating === 'none' ? !movie.vote_average :
+          this.selectedRating === 'all' ? true :
+            movie.vote_average >= Number(this.selectedRating);
+
+      return matchesTitle && matchesGenre && matchesYear && matchesRating;
+    });
   }
 }

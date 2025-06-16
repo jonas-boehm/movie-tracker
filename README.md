@@ -1,72 +1,99 @@
-# 🎜️ MovieTracker
+# MovieTracker
 
-**MovieTracker** ist eine Full-Stack Webanwendung zum Durchsuchen, Filtern und Bewerten von Filmen. Angemeldete Benutzer können Filme mit 0–5 Sternen bewerten – in Echtzeit per WebSocket! Die Bewertungen werden gespeichert und automatisch allen anderen Benutzern angezeigt.
+MovieTracker ist eine Full-Stack Webanwendung zum Verwalten, Durchsuchen und Bewerten von Filmen. Sie verwendet Angular im Frontend und Express.js mit PostgreSQL im Backend. Nutzer können sich registrieren, anmelden, Filme durchsuchen, filtern und eigene Bewertungen abgeben. Bewertungen werden in Echtzeit über WebSockets aktualisiert.
 
----
+## Technologien
 
-## 🚀 Features
+* **Frontend**: Angular mit Bootstrap
+* **Backend**: Node.js, Express
+* **Datenbank**: PostgreSQL
+* **Echtzeit**: WebSockets (ws)
+* **API-Dokumentation**: Swagger (OpenAPI)
+* **Containerisierung**: Docker, Docker Compose
 
-* 🔎 Filmsuche über die TMDB API
-* 🎞️ Filterbar nach Genre, Jahr und Bewertung
-* ⭐ Benutzerbewertungen mit 0–5 Sternen
-* 🧠 Bewertung wird in Echtzeit via WebSocket aktualisiert
-* 🗃️ Alle Bewertungen werden dauerhaft in PostgreSQL gespeichert
-* 👤 Einfaches Login/Registrieren mit Benutzernamen + Passwort
-* 🛣️ Vollständig Dockerisiert (Datenbank + Backend)
+## Voraussetzungen (bei lokaler Ausführung ohne Docker)
 
----
+* Node.js und npm installiert
+* PostgreSQL installiert (alternativ über Docker)
 
-## 🛠️ Technologien
+## Projekt lokal starten (ohne Docker)
 
-* **Frontend:** Angular Standalone Components + Bootstrap
-* **Backend:** Node.js + Express
-* **Datenbank:** PostgreSQL
-* **WebSocket:** `ws`-Modul
-* **API:** TMDB API für Filmdaten
-* **Containerisierung:** Docker + Docker Compose
-
----
-
-## ▶️ Projekt ausführen
-
-### Voraussetzungen
-
-* Docker & Docker Compose installiert
-* `.env`-Datei im Backend mit gültigem TMDB API Key:
-
-  ```env
-  TMDB_API_KEY=dein_api_key
-  ```
-
----
-
-### 🔧 Projekt starten (mit Docker Compose)
+### Backend:
 
 ```bash
-git clone https://git.htl-hl.ac.at/dein-nutzername/movie-tracker.git
-cd movie-tracker
-
-# Starte alle Container: Datenbank + Backend
-docker-compose up --build
+cd backend
+npm install
+npm run dev
 ```
 
----
-
-### 🌐 Zugriff
-
-| Komponente             | URL                                                    |
-| ---------------------- | ------------------------------------------------------ |
-| Frontend (Angular)     | [http://localhost:4200](http://localhost:4200)         |
-| Backend (Express)      | [http://localhost:3000/api](http://localhost:3000/api) |
-| Datenbank (PostgreSQL) | läuft intern auf Port 5432     
-| Appp über Docker       | http://localhost:3000
-
----
-
-## 🧪 Testdatenbankzugriff
-
-Um in den PostgreSQL-Container zu gelangen:
+### Frontend:
 
 ```bash
-docker exec -it movie-tracker-db-1 psql -U postgres -d movietracker
+cd frontend
+npm install
+ng serve --open
 ```
+
+### Datenbank initialisieren (nur beim ersten Start)
+
+PostgreSQL-Datenbank anlegen und SQL-Datei aus `db/init/init.sql` ausführen:
+
+```sql
+CREATE DATABASE movietracker;
+-- Danach Inhalt von init.sql importieren
+```
+
+## Projekt starten über Docker
+
+Stelle sicher, dass Docker und Docker Compose installiert sind.
+
+### Schritte:
+
+```bash
+docker compose up --build
+```
+
+### Ergebnis:
+
+* Das Backend ist unter `http://localhost:3000` erreichbar
+* Swagger UI ist unter `http://localhost:3000/api-docs` erreichbar
+* Angular-Frontend ist unter `http://localhost:3000` eingebunden
+
+## Swagger API-Dokumentation
+
+Alle REST-Endpoints sind automatisch dokumentiert mit Swagger.
+
+Rufe dazu im Browser auf:
+
+```
+http://localhost:3000/api-docs
+```
+
+## Datenbank-Zugriff (Docker)
+
+Standard-Zugangsdaten für PostgreSQL:
+
+* Host: `localhost`
+* Port: `5432`
+* Datenbank: `movietracker`
+* Benutzer: `postgres`
+* Passwort: `postgres`
+
+## Projektstruktur (Auszug)
+
+```
+movie-tracker/
+├── backend/
+│   ├── src/
+│   ├── routes/
+│   ├── controllers/
+│   ├── websocket.js
+│   └── index.js
+├── frontend/
+│   └── src/app/
+├── db/init/init.sql
+├── docker-compose.yml
+└── README.md
+```
+
+

@@ -58,7 +58,8 @@ docker-compose up --build
 | ---------------------- | ------------------------------------------------------ |
 | Frontend (Angular)     | [http://localhost:4200](http://localhost:4200)         |
 | Backend (Express)      | [http://localhost:3000/api](http://localhost:3000/api) |
-| Datenbank (PostgreSQL) | läuft intern auf Port 5432                             |
+| Datenbank (PostgreSQL) | läuft intern auf Port 5432     
+| Appp über Docker       | http://localhost:3000
 
 ---
 

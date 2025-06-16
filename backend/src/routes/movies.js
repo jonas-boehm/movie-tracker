@@ -4,7 +4,6 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
-// 🔁 Genre Mapping (Name → ID)
 const genreMap = {
     'Action': 28,
     'Adventure': 12,
@@ -27,7 +26,29 @@ const genreMap = {
     'Western': 37
 };
 
-// ✅ Beliebte Filme (optional mit Seitenzahl)
+/**
+ * @swagger
+ * tags:
+ *   name: Movies
+ *   description: Endpunkte für Filme 
+ */
+
+/**
+ * @swagger
+ * /movies/popular:
+ *   get:
+ *     summary: Gibt eine Liste beliebter Filme zurück
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Seitenzahl für die Paginierung
+ *     responses:
+ *       200:
+ *         description: Erfolgreich abgerufen
+ */
 router.get('/popular', async (req, res) => {
     try {
         const page = req.query.page || 1;
@@ -39,7 +60,30 @@ router.get('/popular', async (req, res) => {
     }
 });
 
-// ✅ Suche nach Titel
+/**
+ * @swagger
+ * /movies/search:
+ *   get:
+ *     summary: Sucht nach Filmen anhand eines Titels
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Der Suchbegriff (z. B. Filmtitel)
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Seitenzahl für die Paginierung
+ *     responses:
+ *       200:
+ *         description: Erfolgreich abgerufen
+ *       400:
+ *         description: Suchbegriff fehlt
+ */
 router.get('/search', async (req, res) => {
     const query = req.query.query;
     const page = req.query.page || 1;
@@ -53,7 +97,6 @@ router.get('/search', async (req, res) => {
         const tmdbRes = await fetch(url);
         const data = await tmdbRes.json();
 
-        // Bonus: Relevanzbewertung (z. B. IMDb-ähnlich)
         const sorted = data.results.sort((a, b) =>
             (b.vote_average * b.vote_count) - (a.vote_average * a.vote_count)
         );
@@ -64,7 +107,37 @@ router.get('/search', async (req, res) => {
     }
 });
 
-// ✅ Filter: Genre + Jahr + Bewertung + Sortierung nach Qualität & Relevanz
+/**
+ * @swagger
+ * /movies/filter:
+ *   get:
+ *     summary: Gibt Filme basierend auf Filtern zurück (Genre, Jahr, Bewertung)
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: query
+ *         name: genre
+ *         schema:
+ *           type: string
+ *         description: Genre-Name wie "Action" oder "Comedy"
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: string
+ *         description: Erscheinungsjahr des Films
+ *       - in: query
+ *         name: rating
+ *         schema:
+ *           type: string
+ *         description: Bewertung (z. B. "none", "all", oder eine Zahl wie "7")
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Seitenzahl für die Paginierung
+ *     responses:
+ *       200:
+ *         description: Erfolgreich abgerufen
+ */
 router.get('/filter', async (req, res) => {
     const { genre, year, rating } = req.query;
     const page = req.query.page || 1;
@@ -72,10 +145,10 @@ router.get('/filter', async (req, res) => {
     const params = new URLSearchParams({
         api_key: TMDB_API_KEY,
         language: 'de',
-        sort_by: 'popularity.desc',       // 🔁 Bessere Vorschläge
+        sort_by: 'popularity.desc',
         include_adult: 'false',
         include_video: 'false',
-        'vote_count.gte': '300',          // 🛡️ Verhindert "obskure Filme"
+        'vote_count.gte': '300',
         page
     });
 
@@ -92,7 +165,6 @@ router.get('/filter', async (req, res) => {
         const tmdbRes = await fetch(url);
         const data = await tmdbRes.json();
 
-        // 🔍 Lokale Sortierung nach "weighted rating"
         let results = data.results;
 
         if (rating && rating !== 'all') {

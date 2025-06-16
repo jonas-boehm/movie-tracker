@@ -2,6 +2,39 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db'); // Verbindung zu PostgreSQL
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Endpunkte für Login/Registrierung
+ */
+
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Registriert einen neuen Benutzer
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Registrierung erfolgreich
+ *       400:
+ *         description: Benutzer existiert bereits
+ */
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -17,6 +50,32 @@ router.post('/register', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Meldet einen Benutzer an
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login erfolgreich
+ *       401:
+ *         description: Ungültige Anmeldedaten
+ */
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {

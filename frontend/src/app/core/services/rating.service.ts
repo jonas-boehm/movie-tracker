@@ -1,4 +1,3 @@
-// src/app/core/services/rating.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
@@ -18,11 +17,18 @@ export class RatingService {
     };
   }
 
+  // 🔄 WebSocket-Stream abonnieren
   getRatingUpdates(): Observable<any> {
     return this.ratingUpdates$.asObservable();
   }
 
+  // 🟡 Bewertung absenden
   sendRating(userId: number, movieId: number, rating: number): Observable<any> {
     return this.http.post('/api/ratings/rate', { userId, movieId, rating });
+  }
+
+  // 🟢 Bewertung beim Seitenladen abholen
+  getRating(movieId: number): Observable<{ average: number, count: number }> {
+    return this.http.get<{ average: number, count: number }>(`/api/ratings/${movieId}`);
   }
 }
